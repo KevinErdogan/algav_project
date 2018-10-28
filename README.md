@@ -1,1 +1,3 @@
-# algav_project
+# Auteurs : 
+# Erdogan Kevin
+# Seng Kelly
