@@ -17,9 +17,7 @@ public class Cle {
 	
 	//question 1.1
 	public boolean inf(Cle c) {
-		if(this.getTaille()< c.getTaille()) return true;
-		if(this.getTaille() > c.getTaille()) return false;
-		for(int i =0; i<this.getTaille();i++) {
+		for(int i =0; i<4;i++) {
 			if (this.cle[i] < c.getCle()[i]) return true;
 			if (this.cle[i] > c.getCle()[i]) return false;
 		}
@@ -29,13 +27,8 @@ public class Cle {
 	
 	//question 1.2
 	public boolean eg(Cle c) {
-		if(this.getTaille() != c.getTaille()) {
-			return false;
-		}
-		else {
-			for (int i= 0;i<this.getTaille();i++) {
-				if(this.cle[i] !=  c.getCle()[i]) return false;
-			}
+		for (int i= 0;i<4;i++) {
+			if(this.cle[i] !=  c.getCle()[i]) return false;
 		}
 		return true;
 	}
@@ -46,10 +39,6 @@ public class Cle {
 	
 	public void setCle(Cle c) {
 		this.cle = c.cle;
-	}
-	
-	public int getTaille() {
-		return this.cle.length;
 	}
 	
 	public String toString() {
