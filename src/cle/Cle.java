@@ -19,7 +19,7 @@ public class Cle {
 	public boolean inf(Cle c) {
 		for(int i =0; i<4;i++) {
 			if (this.cle[i] < c.getCle()[i]) return true;
-			if (this.cle[i] > c.getCle()[i]) return false;
+			if (this.cle[i] > c.getCle()[i]) break;
 		}
 		return false;
 	}
