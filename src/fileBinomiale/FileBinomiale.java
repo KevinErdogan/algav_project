@@ -108,44 +108,5 @@ public class FileBinomiale {
 		for(Cle c : cles)
 			ajout(new TournoiBinomiale(c));
 	}
-	
-	// Test Area
-	
-	public static void main(String[] args) {
-		LinkedList<Cle> cles = new LinkedList<Cle>();
-		try {
-			FileReader f = new FileReader(new File("cles_alea/jeu_1_nb_cles_50000.txt"));
-			char buffer0x[] = new char[2];
-			String s = "";
-			int turn=3;
-			long values[] = new long[] { 0, 0, 0, 0 };
-			char a = 0;
-			while(f.read(buffer0x)>0) {
-				while((a= ((char) f.read()))!='\n' && s.length()<=32)
-					s = s + a;
-				while(s.length()>=8) {
-					values[turn]=Long.parseLong(s.substring(s.length()-8,s.length()), 16);
-					turn--;
-					s=s.substring(0, s.length()-8);
-				}
-				if(turn>-1)
-					values[turn]=Long.parseLong(s, 16);
-				cles.add(new Cle(values[0], values[1], values[2], values[3]));
-				values[0]=0;values[1]=0;values[2]=0;values[3]=0;
-				s="";
-				turn=3;
-			}
-			f.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Nombre de cles : "+cles.size());
-		System.out.println("Test de la complexite temporelle de la fonction ConsIter");
-		FileBinomiale f = new FileBinomiale();
-		System.out.println("Start !");
-		long startTime = System.currentTimeMillis();
-		f.ConsIter(cles);
-		long endTime = System.currentTimeMillis();
-		System.out.println("End ! Time : "+(endTime-startTime));
-	}
+
 }
