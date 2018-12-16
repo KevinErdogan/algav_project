@@ -23,7 +23,7 @@ public class ArbreBinaire {
 		
 		// cas 1 :  ajout dans un arbre vide
 		if(racine == null) {
-			this.racine = new Noeud(c);
+			racine = new Noeud(c);
 		}
 		else{
 			
@@ -31,13 +31,13 @@ public class ArbreBinaire {
 			 * cas 2 : on ajoute au dernier noeud le nouveau noeud a gauche si l'arbre est complet 
 			 * ou si fils gauche incomplet, ou a droite  si le fils gauche est complet
 			 */
-			AjoutDernierNoeud(c,this.racine,null);
+			AjoutDernierNoeud(c,racine,null);
 			
 			/*
 			 * pour la dernière clé ajoutée, on compare la clé de son parent avec la sienne, si elle est plus grande
 			 * alors on les échange et ainsi de suite jusqu'à ce qu'on arrive à la racine
 			 */
-			Noeud d = this.dernierNoeud(this.racine);
+			Noeud d = dernierNoeud(racine);
 			Noeud p = d.getParent();
 			
 			while(p != null) {
@@ -74,12 +74,13 @@ public class ArbreBinaire {
 	
 	public void SupprMin() {
 		
-		//cas triviaux 
-		if(this.racine == null) return;
-		if(this.taille(this.racine) == 1) this.racine = null;
+		//cas de base
+		if(racine == null) return;
+		if(taille(racine) == 1) racine = null;
+		
 		else {
-		Noeud d = dernierNoeud(this.racine);
-		Noeud p = this.racine;
+		Noeud d = dernierNoeud(racine);
+		Noeud p = racine;
 		
 		//on échange les clés de la racine et de la derniere feuille
 		swap(d,p);
@@ -110,6 +111,8 @@ public class ArbreBinaire {
 		Noeud min;
 		Noeud g = n.getGauche();
 		Noeud d = n.getDroit();
+		
+		
 		if(g != null && d !=null) {
 			if(g.getVal().inf(d.getVal()) || g.getVal().eg(d.getVal())) {
 				min = g;
@@ -123,7 +126,6 @@ public class ArbreBinaire {
 			min = d;
 		}
 		else return;
-		
 		//comparaison avec le noeud actuel
 		if(min.getVal().eg(n.getVal())) return;
 		if(min.getVal().inf(n.getVal())) {
@@ -134,50 +136,11 @@ public class ArbreBinaire {
 	
 	
 	public ArbreBinaire ConsIter(List <Cle> cles) {
-		List <Noeud> noeuds = new ArrayList<Noeud>();
-		
-		//liste des noeuds du nouveau tas
+		ArbreBinaire a = new ArbreBinaire();
 		for (Cle c : cles) {
-			noeuds.add(new Noeud(c));
+			a.Ajout(c);
 		}
-		
-		//pere (i-1)/2
-		//gauche 2*i+1
-		//droite 2*i+2
-		//creation de l'arborescence du tas (set : fils gauche, fils droit et pere)
-		int taille = noeuds.size();
-		for(int i =0; i<taille;i++) {
-			Noeud curr = noeuds.get(i);		
-			
-			if((2*i+1) < taille && (2*i+2) < taille) {
-				Noeud g = noeuds.get(2*i+1);
-				Noeud d = noeuds.get(2*i+2);
-				curr.setGauche(g);
-				curr.setDroit(d);
-			}
-			else if((2*i+1) < taille) {
-				Noeud g = noeuds.get(2*i+1);
-				curr.setGauche(g);
-			}
-			else if((2*i+2) < taille) {
-				Noeud d = noeuds.get(2*i+2);
-				curr.setDroit(d);
-			}
-			if((i-1)/2 > 0) {
-				Noeud p = noeuds.get((i-1)/2);
-				curr.setParent(p);
-			}
-		}
-		
-		/*
-		 *pour chaque noeud qui ont des fils : si leur clé est plus petite alors on les fait descendre dans
-		 *l'arbre en commencant par le dernier noeud ayant des fils
-		 */
-		for(int i = (noeuds.size()/2)-1;i>=0;i--){
-			descendre(noeuds.get(i));
-		}
-		
-		return new ArbreBinaire(noeuds.get(0));
+		return a;
 	}
 	
 	
@@ -189,7 +152,6 @@ public class ArbreBinaire {
 		union.addAll(l1);
 		union.addAll(l2);
 	
-		System.out.println(union.size());
 		return ConsIter(union);
 	}
 	
@@ -262,9 +224,9 @@ public class ArbreBinaire {
 	}
 	
 	
-	//retourne le dernier noeud ajouté
+	//retourne le dernier noeud ajouté : O(log n )
 	public Noeud dernierNoeud(Noeud n) {
-		if(n.estComplet() && n.getGauche() == null && n.getDroit() == null) {
+		if(n.getGauche() == null && n.getDroit() == null) {
 			return n;
 		}
 		if(n.estComplet()) {
@@ -285,8 +247,5 @@ public class ArbreBinaire {
 	
 	public Noeud getRacine() {
 		return this.racine;
-	}
-
-
-	  
+	}	  
 }
