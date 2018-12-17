@@ -13,13 +13,48 @@ import fileBinomiale.FileBinomiale;
 public class Test {
 	// Test Area
 	public static void main(String[] args) {
-		// Tas min
-		
+		/* Test Ajout
+		FileBinomiale f = new FileBinomiale();
+		f= f.ajout(new TournoiBinomiale(new Cle(0,0,0,1)));
+		f= f.ajout(new TournoiBinomiale(new Cle(0,0,0,1)));
+		TournoiBinomiale t1 = (new TournoiBinomiale(new Cle(0,0,1,0))).union2Tid(new TournoiBinomiale(new Cle(0,1,0,1)));
+		f = f.ajout(t1);
+		TournoiBinomiale t3 = ((new TournoiBinomiale(new Cle(0,0,1,0))).union2Tid(new TournoiBinomiale(new Cle(0,1,0,1)))).union2Tid((new TournoiBinomiale(new Cle(0,0,1,0))).union2Tid(new TournoiBinomiale(new Cle(0,1,0,1)))).union2Tid(((new TournoiBinomiale(new Cle(0,0,1,0))).union2Tid(new TournoiBinomiale(new Cle(0,1,0,1)))).union2Tid((new TournoiBinomiale(new Cle(0,0,1,0))).union2Tid(new TournoiBinomiale(new Cle(0,1,0,1)))));
+		f= f.ajout(t3);
+		f= f.ajout(new TournoiBinomiale(new Cle(0,0,0,1)));
+		f= f.ajout(new TournoiBinomiale(new Cle(0,0,0,1)));
+		f= f.ajout(new TournoiBinomiale(new Cle(0,0,0,1)));
+		f= f.ajout(new TournoiBinomiale(new Cle(0,0,0,1)));
+		f= f.ajout(new TournoiBinomiale(new Cle(0,0,0,1)));
+		f= f.ajout(new TournoiBinomiale(new Cle(0,0,1,1)));
+		System.out.println(f);
+		*/
 		// Test ConsIter FileBinomiale
 		Test.testFileBinomialeConsIter("cles_alea");
 	}
 	
 	public static void testFileBinomialeConsIter(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		for(File file : txtFiles) {
+			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+file.getName());
+			//System.out.println("Test du fichier : "+file.getName());
+			System.out.print(/*"Nombre de cles : "*/ + cles.size()+" ");
+			//System.out.println("Test de la complexite temporelle de la fonction ConsIter");
+			//System.out.println("Start...");
+			FileBinomiale f = new FileBinomiale();
+			long startTime = System.nanoTime();
+			f.ConsIter(cles);
+			long endTime = System.nanoTime();
+			System.out.println(/*"End ! Time : " */+ (endTime - startTime) + " ns.");
+		}
+	}
+	
+	public static void testFileBinomialeUnion(String repertoryName) {
 		File rep = new File(repertoryName);
 		File[] txtFiles = rep.listFiles(new FilenameFilter(){
 		  public boolean accept(File dir, String name) {

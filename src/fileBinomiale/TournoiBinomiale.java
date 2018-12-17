@@ -67,8 +67,14 @@ class Noeud {
 		}
 			
 		TournoiBinomiale newT = new TournoiBinomiale();
-		newT.racine = t.racine;
-		newT.racine.fils.addFirst(racine);
+		// la racine est la plus petite des deux cles
+		if(t.racine.getVal().inf(racine.getVal())) {
+			newT.racine = t.racine;
+			newT.racine.fils.addFirst(racine);
+		}else {
+			newT.racine = racine;
+			newT.racine.fils.addFirst(t.racine);
+		}
 		return newT;
 	}
 	
