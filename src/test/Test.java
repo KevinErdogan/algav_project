@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import avl.AVL;
 import cle.Cle;
 import fileBinomiale.FileBinomiale;
+import md5.Md5;
 
 public class Test {
 	// Test Area
@@ -31,6 +33,28 @@ public class Test {
 		*/
 		// Test ConsIter FileBinomiale
 		Test.testFileBinomialeConsIter("cles_alea");
+	}
+	
+	//Q6.12
+	public static void AVLShakespeare(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		Md5 hash = new Md5();
+		for(File file : txtFiles) {
+			AVL tree = new AVL();
+			List<String> words = Test.readWordFile(repertoryName+"/"+file.getName());
+			LinkedList<String> uniqueWords = new LinkedList<String>();
+			for(String w : words) {
+				tree.insert(tree.getRacine(), hash.md5(w));
+				if(!tree.isIn(hash.md5(w)))
+				uniqueWords.addLast(w);
+			}
+			
+		}
 	}
 	
 	public static void testFileBinomialeConsIter(String repertoryName) {
@@ -108,5 +132,26 @@ public class Test {
 		}
 
 		return cles;
+	}
+	
+	public static List<String> readWordFile(String path){
+		List<String> words = new LinkedList<String>();
+		try {
+			FileReader f = new FileReader(new File(path));
+			String s = "";
+			char a = 0;
+			while ((a=(char) f.read()) > 0) {
+				if(a!='\n') { 
+					s=s+a;
+				}else {
+					words.add(new String(s));
+					s="";
+				}
+			}
+			f.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return words;
 	}
 }
