@@ -104,8 +104,6 @@ public Cle md5(String s) {
 		 res.putInt(c_mem);
 		 res.putInt(d_mem);
 		 
-		 int [] t = new int [4];
-		 int i = Byte.toUnsignedInt(res.array()[0]);
 		 
 		 String s1 = toHexString(res.array());
 		 long l1 = toLong(s1.substring(0, 8));
