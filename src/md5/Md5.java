@@ -50,10 +50,10 @@ public Cle md5(String s) {
 	    bb.putLong(bb.capacity() - 8, lengthInBits);
 		bb.rewind();
 		
-		 int a_mem = h0;
-	     int b_mem = h1;
-	 	 int c_mem = h2;
-		 int d_mem = h3;
+		 int tmp_a = h0;
+	     int tmp_b = h1;
+	 	 int tmp_c = h2;
+		 int tmp_d = h3;
 		while(bb.hasRemaining()) {
 			
 		    IntBuffer w = bb.slice().order(ByteOrder.LITTLE_ENDIAN).asIntBuffer();
@@ -88,10 +88,10 @@ public Cle md5(String s) {
 					a = temp;
 			    }
 				
-			a_mem +=a;
-			b_mem +=b;
-			c_mem +=c;
-			d_mem +=d;
+			tmp_a +=a;
+			tmp_b +=b;
+			tmp_c +=c;
+			tmp_d +=d;
 			
 			bb.position(bb.position() + 64);
 		 }
@@ -99,10 +99,10 @@ public Cle md5(String s) {
 		
 		 
 		ByteBuffer res = ByteBuffer.allocate(16).order(ByteOrder.LITTLE_ENDIAN);
-		 res.putInt(a_mem);
-		 res.putInt(b_mem);
-		 res.putInt(c_mem);
-		 res.putInt(d_mem);
+		 res.putInt(tmp_a);
+		 res.putInt(tmp_b);
+		 res.putInt(tmp_c);
+		 res.putInt(tmp_d);
 		 
 		 
 		 String s1 = toHexString(res.array());
