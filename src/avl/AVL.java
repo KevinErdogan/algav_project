@@ -128,6 +128,23 @@ public class AVL {
 	public Node getRacine() {
 		return racine;
 	}
+	
+	public boolean recherche(Node n,Cle c) {
+		
+		if(n == null) return false;
+		if(n.key.eg(c)) return true;
+		else{
+			Node g = n.left;
+			Node d = n.right;
+
+			if (c.inf(n.key)){
+				return recherche(g,c);
+			}
+			else {
+				return recherche(d,c);
+			}
+		}
+	}
 
 	public static void main(String[] args) { 
 		AVL tree = new AVL(); 
