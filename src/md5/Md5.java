@@ -16,10 +16,10 @@ public class Md5 {
 			6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,	
 	}; 
 	
-	private int h0 = 0x67452301;
-	private int h1 = 0xEFCDAB89;
-	private int h2 = 0x98BADCFE;
-	private int h3 = 0x10325476;
+	private static final int h0 = 0x67452301;
+	private static final int h1 = 0xEFCDAB89;
+	private static final int h2 = 0x98BADCFE;
+	private static final int h3 = 0x10325476;
 
 	private final int [] k;
 	
@@ -41,21 +41,25 @@ public class Md5 {
 			sizePadding ++;
 		}
 		
-		sizePadding += 64;
 		long lengthInBits = (long)message.length * 8;
-		
+		sizePadding += 64;
 		
 		ByteBuffer bb = ByteBuffer.allocate(sizePadding/8).order(ByteOrder.LITTLE_ENDIAN);
 	  	bb.put(message);
 	   	bb.put((byte)0x80);
 	        bb.putLong(bb.capacity() - 8, lengthInBits);
 		bb.rewind();
-		while(bb.hasRemaining()) {
+		
+		 int a_mem = h0;
+	         int b_mem = h1;
+	 	 int c_mem = h2;
+		 int d_mem = h3;
+		 while(bb.hasRemaining()) {
 			
 		    IntBuffer w = bb.slice().order(ByteOrder.LITTLE_ENDIAN).asIntBuffer();
 		    int a = h0;
 	            int b = h1;
-	   	    int c = h2;
+	 	    int c = h2;
 		    int d = h3;
 		    int f,g,temp;
 		    
@@ -84,20 +88,20 @@ public class Md5 {
 					a = temp;
 			    }
 				
-			h0 = h0 + a;
-			h1 = h1 + b;
-			h2 = h2 + c;
-			h3 = h3 + d;
+			a_mem +=a;
+			b_mem +=b;
+			c_mem +=c;
+			d_mem +=d;
 			
 			bb.position(bb.position() + 64);
 		 }
 		
 		 
 		 ByteBuffer res = ByteBuffer.allocate(16).order(ByteOrder.LITTLE_ENDIAN);
-		 res.putInt(h0);
-		 res.putInt(h1);
-		 res.putInt(h2);
-		 res.putInt(h3);
+		 res.putInt(a_mem);
+		 res.putInt(b_mem);
+		 res.putInt(c_mem);
+		 res.putInt(d_mem);
 		 return toHexString(res.array());
 		 
 		// return new Cle (h0,h1,h2,h3);
@@ -120,9 +124,8 @@ public class Md5 {
 		
 		System.out.println("0X"+md.md5("a"));
 		System.out.println("0X"+md.md5(""));
-		System.out.println("0X"+md.md5("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"));
+		System.out.println("0X"+md.md5("abc"));
 	
 	}
 }
 
-	
