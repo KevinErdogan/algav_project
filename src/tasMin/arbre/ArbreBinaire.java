@@ -30,7 +30,7 @@ public class ArbreBinaire {
 			/*
 			 * cas 2 : on ajoute au dernier noeud le nouveau noeud a gauche si l'arbre est complet 
 			 * ou si fils gauche incomplet, ou a droite  si le fils gauche est complet
-			 */
+			 */  
 			AjoutDernierNoeud(c,racine,null);
 			
 			/*

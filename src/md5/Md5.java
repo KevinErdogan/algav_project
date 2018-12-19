@@ -31,7 +31,7 @@ public class Md5 {
 	}
 	
 	
-	public String md5(String s) {
+public Cle md5(String s) {
 		
 		byte [] message = s.getBytes();
 		
@@ -46,19 +46,19 @@ public class Md5 {
 		
 		ByteBuffer bb = ByteBuffer.allocate(sizePadding/8).order(ByteOrder.LITTLE_ENDIAN);
 	  	bb.put(message);
-	   	bb.put((byte)0x80);
-	        bb.putLong(bb.capacity() - 8, lengthInBits);
+	   	bb.put((byte)128);
+	    bb.putLong(bb.capacity() - 8, lengthInBits);
 		bb.rewind();
 		
 		 int a_mem = h0;
-	         int b_mem = h1;
+	     int b_mem = h1;
 	 	 int c_mem = h2;
 		 int d_mem = h3;
-		 while(bb.hasRemaining()) {
+		while(bb.hasRemaining()) {
 			
 		    IntBuffer w = bb.slice().order(ByteOrder.LITTLE_ENDIAN).asIntBuffer();
 		    int a = h0;
-	            int b = h1;
+	        int b = h1;
 	 	    int c = h2;
 		    int d = h3;
 		    int f,g,temp;
@@ -96,19 +96,28 @@ public class Md5 {
 			bb.position(bb.position() + 64);
 		 }
 		
+		
 		 
-		 ByteBuffer res = ByteBuffer.allocate(16).order(ByteOrder.LITTLE_ENDIAN);
+		ByteBuffer res = ByteBuffer.allocate(16).order(ByteOrder.LITTLE_ENDIAN);
 		 res.putInt(a_mem);
 		 res.putInt(b_mem);
 		 res.putInt(c_mem);
 		 res.putInt(d_mem);
-		 return toHexString(res.array());
 		 
-		// return new Cle (h0,h1,h2,h3);
+		 int [] t = new int [4];
+		 int i = Byte.toUnsignedInt(res.array()[0]);
+		 
+		 String s1 = toHexString(res.array());
+		 long l1 = toLong(s1.substring(0, 8));
+		 long l2 = toLong(s1.substring(8, 16));
+		 long l3 = toLong(s1.substring(16, 24));
+		 long l4 = toLong(s1.substring(24, 32));
+		 
+		 return new Cle (l1,l2,l3,l4);
+		
+
 	}
 
-
-	
 	public static String toHexString(byte[] b){
 	    StringBuilder sb = new StringBuilder();
 	    for (int i = 0; i < b.length; i++)
@@ -118,14 +127,16 @@ public class Md5 {
 	    return sb.toString();
 	}
 
+	public Long toLong(String s) {
+		return Long.parseLong(Integer.toUnsignedString((int) (long) Long.decode("0X"+s)));
+	}
 	
 	public static void main(String[] args) {
 		Md5 md = new Md5();
-		
-		System.out.println("0X"+md.md5("a"));
-		System.out.println("0X"+md.md5(""));
-		System.out.println("0X"+md.md5("abc"));
-	
+		System.out.println(md.md5("a"));
+		System.out.println(md.md5("Bonjour"));
 	}
 }
+
+	
 

@@ -16,7 +16,7 @@ public class Tableau {
 	
 	public Tableau() {
 		list = new ArrayList<Cle>();
-	}
+	}//
 	
 	public Tableau(List <Cle> cles) {	
 		this.list = cles;
