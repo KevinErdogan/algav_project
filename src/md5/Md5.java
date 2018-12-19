@@ -41,8 +41,9 @@ public class Md5 {
 			sizePadding ++;
 		}
 		
-		long lengthInBits = (long)message.length * 8;
 		sizePadding += 64;
+		long lengthInBits = (long)message.length * 8;
+		
 		
 		ByteBuffer bb = ByteBuffer.allocate(sizePadding/8).order(ByteOrder.LITTLE_ENDIAN);
 	  	bb.put(message);
@@ -118,6 +119,8 @@ public class Md5 {
 		Md5 md = new Md5();
 		
 		System.out.println("0X"+md.md5("a"));
+		System.out.println("0X"+md.md5(""));
+		System.out.println("0X"+md.md5("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"));
 	
 	}
 }
