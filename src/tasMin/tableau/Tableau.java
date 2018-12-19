@@ -86,7 +86,6 @@ public class Tableau {
 	//retourne l'union de t1 et this
 	public Tableau Union(Tableau t1) {
 		//cas de base
-		if(list.size() == 0 && t1.list.size() == 0) return this;
 		if(t1.list.size() == 0) return this;
 		if(list.size() == 0) return t1;
 

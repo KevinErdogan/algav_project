@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import avl.AVL;
 import cle.Cle;
 import fileBinomiale.FileBinomiale;
 import md5.Md5;
+import tasMin.tableau.Tableau;
 
 public class Test {
 	// Test Area
@@ -32,7 +34,10 @@ public class Test {
 		System.out.println(f);
 		*/
 		// Test ConsIter FileBinomiale
-		Test.testFileBinomialeConsIter("cles_alea");
+		//Test.testFileBinomialeConsIter("cles_alea");
+		Test.AVLShakespeare("Shakespeare");
+		
+		//Test.testFileBinomialeConsIter("cles_alea");
 	}
 	
 	//Q6.12
@@ -44,15 +49,25 @@ public class Test {
 		  }
 		});
 		Md5 hash = new Md5();
+		
 		for(File file : txtFiles) {
+			System.out.println(file.getName());
 			AVL tree = new AVL();
+		
 			List<String> words = Test.readWordFile(repertoryName+"/"+file.getName());
+			
 			LinkedList<String> uniqueWords = new LinkedList<String>();
+			long startTime = System.nanoTime();
 			for(String w : words) {
-				tree.insert(tree.getRacine(), hash.md5(w));
-				if(!tree.isIn(hash.md5(w)))
-				uniqueWords.addLast(w);
+				Cle c = hash.md5(w);
+				if(!tree.recherche(tree.getRacine(), c)){
+					uniqueWords.addLast(w);
+					tree.insert(tree.getRacine(),c);
+				}
 			}
+			long endTime = System.nanoTime();
+			System.out.println(/*"End ! Time : " */+ (endTime - startTime) + " ns.");
+			//System.out.println(uniqueWords);
 			
 		}
 	}
@@ -77,6 +92,28 @@ public class Test {
 			System.out.println(/*"End ! Time : " */+ (endTime - startTime) + " ns.");
 		}
 	}
+	
+	public static void testTasTableauConsIter(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		for(File file : txtFiles) {
+			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+file.getName());
+			System.out.println("Test du fichier : "+file.getName());
+			System.out.println("Nombre de cles : " + cles.size());
+			System.out.println("Test de la complexite temporelle de la fonction ConsIter");
+			System.out.println("Start...");
+			Tableau t = new Tableau();
+			long startTime = System.nanoTime();
+			t.ConsIter(cles);
+			long endTime = System.nanoTime();
+			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
+		}
+	}
+
 	
 	public static void testFileBinomialeUnion(String repertoryName) {
 		File rep = new File(repertoryName);
@@ -139,8 +176,10 @@ public class Test {
 		try {
 			FileReader f = new FileReader(new File(path));
 			String s = "";
+			int b;
 			char a = 0;
-			while ((a=(char) f.read()) > 0) {
+			while ((b=f.read()) > 0) {
+				a = (char) b;
 				if(a!='\n') { 
 					s=s+a;
 				}else {
