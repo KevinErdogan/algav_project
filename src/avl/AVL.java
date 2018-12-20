@@ -4,138 +4,113 @@ import cle.Cle;
 
 public class AVL { 
 	
-	class Node { 
+	class Noeud { 
 		private Cle key;
-		private int height; 
-		private Node left, right; 
+		private int hauteur; 
+		private Noeud gauche, droite; 
 		
-		Node(Cle d) { 
+		Noeud(Cle d) { 
 			key = d; 
-			height = 1; 
+			hauteur = 1; 
 		} 
 	}
 	
-	private Node racine=null;
+	private Noeud racine=null;
+	
+	private Noeud rotationDroite(Noeud n) { 
+		Noeud g = n.gauche; 
+		Noeud T = g.droite; 
 
-	public AVL() {}
+		//Rotation
+		g.droite = n; 
+		n.gauche = T; 
 
-	private Node rightRotate(Node y) { 
-		Node x = y.left; 
-		Node T2 = x.right; 
+		//mise à jour de la hauteur
+		n.hauteur = max(hauteur(n.gauche), hauteur(n.droite)) + 1; 
+		g.hauteur = max(hauteur(g.gauche), hauteur(g.droite)) + 1; 
 
-		// Perform rotation 
-		x.right = y; 
-		y.left = T2; 
-
-		// Update heights 
-		y.height = max(height(y.left), height(y.right)) + 1; 
-		x.height = max(height(x.left), height(x.right)) + 1; 
-
-		// Return new root 
-		return x; 
+		return g; 
 	} 
 
-	private Node leftRotate(Node x) { 
-		Node y = x.right; 
-		Node T2 = y.left; 
+	private Noeud rotationGauche(Noeud n) { 
+		Noeud d = n.droite; 
+		Noeud T = d.gauche; 
 
-		// Perform rotation 
-		y.left = x; 
-		x.right = T2; 
+		//Rotation
+		d.gauche = n;  
+		n.droite = T; 
 
-		// Update heights 
-		x.height = max(height(x.left), height(x.right)) + 1; 
-		y.height = max(height(y.left), height(y.right)) + 1; 
+		// mise à jour de la hauteur
+		n.hauteur = max(hauteur(n.gauche), hauteur(n.droite)) + 1; 
+		d.hauteur = max(hauteur(d.gauche), hauteur(d.droite)) + 1; 
 
-		// Return new root 
-		return y; 
+		return d; //y est la nouvelle racine 
 	} 
 
-	public Node insert(Node node, Cle key) { 
+	public Noeud insert(Noeud n, Cle key) { 
 
-		/* 1. Perform the normal BST insertion */
-		if (node == null) 
-			return (new Node(key)); 
+		//cas de base : insertion dans un ABR
+		if (n == null) return (new Noeud(key)); 
 
-		if (key.inf(node.key)) 
-			node.left = insert(node.left, key); 
-		else if (node.key.inf(key)) 
-			node.right = insert(node.right, key); 
-		else // Duplicate keys not allowed 
-			return node; 
+		if (key.inf(n.key)) n.gauche = insert(n.gauche, key); 
+		else if (n.key.inf(key)) n.droite = insert(n.droite, key); 
+		else return n; 
 
-		/* 2. Update height of this ancestor node */
-		node.height = 1 + max(height(node.left), 
-							height(node.right)); 
+		//mise à jour de la hauteur du noeud
+		n.hauteur = 1 + max(hauteur(n.gauche), hauteur(n.droite)); 
 
-		/* 3. Get the balance factor of this ancestor 
-			node to check whether this node became 
-			unbalanced */
-		int balance = getBalance(node); 
-
-		// If this node becomes unbalanced, then there 
-		// are 4 cases Left Left Case 
-		if (balance > 1 && key.inf(node.left.key)) 
-			return rightRotate(node); 
-
-		// Right Right Case 
-		if (balance < -1 && node.right.key.inf(key))
-			return leftRotate(node); 
-
-		// Left Right Case 
-		if (balance > 1 && node.left.key.inf(key)) { 
-			node.left = leftRotate(node.left); 
-			return rightRotate(node); 
+		//REEQUILIBRAGE
+		
+		int balance = getBalance(n); 
+	
+		if (balance > 1 && key.inf(n.gauche.key)) return rotationDroite(n); 
+		if (balance < -1 && n.droite.key.inf(key))return rotationGauche(n); 
+		if (balance > 1 && n.gauche.key.inf(key)) { 
+			n.gauche = rotationGauche(n.gauche); 
+			return rotationDroite(n); 
+		} 
+		if (balance < -1 && key.inf(n.droite.key)) { 
+			n.droite = rotationDroite(n.droite); 
+			return rotationGauche(n); 
 		} 
 
-		// Right Left Case 
-		if (balance < -1 && key.inf(node.right.key)) { 
-			node.right = rightRotate(node.right); 
-			return leftRotate(node); 
-		} 
-
-		/* return the (unchanged) node pointer */
-		return node; 
+		return n; 
 	} 
 
 
-	public static int height(Node N) { 
-		if (N == null) 
-			return 0; 
-
-		return N.height; 
+	public static int hauteur(Noeud n) { 
+		if (n == null) return 0; 
+		return n.hauteur; 
 	} 
 
 	public static int max(int a, int b) { 
 		return (a > b) ? a : b; 
 	} 
 	
-	public static int getBalance(Node N) { 
-		if (N == null) 
-			return 0; 
-
-		return AVL.height(N.left) - height(N.right); 
+	public static int getBalance(Noeud n) { 
+		if (n == null) return 0;
+		return hauteur(n.gauche) - hauteur(n.droite); 
 	} 
 	
-	public static void preOrder(Node node) { 
-		if (node != null) { 
-			System.out.print(node.key + " "); 
-			AVL.preOrder(node.left); 
-			AVL.preOrder(node.right); 
+	public static void parcoursPrefixe(Noeud Noeud) { 
+		if (Noeud != null) { 
+			System.out.print(Noeud.key + " "); 
+			AVL.parcoursPrefixe(Noeud.gauche); 
+			AVL.parcoursPrefixe(Noeud.droite); 
 		} 
 	} 
 	
-	public Node getRacine() {
+	public Noeud getRacine() {
 		return racine;
 	}
 	
-	public boolean recherche(Node n,Cle c) {
+	public boolean recherche(Noeud n,Cle c) {
 		
 		if(n == null) return false;
 		if(n.key.eg(c)) return true;
 		else{
-			Node g = n.left;
-			Node d = n.right;
+			Noeud g = n.gauche;
+			Noeud d = n.droite;
 
 			if (c.inf(n.key)){
 				return recherche(g,c);
@@ -148,8 +123,8 @@ public class AVL {
 
 	public static void main(String[] args) { 
 		AVL tree = new AVL(); 
-
-		/* Constructing tree given in the above figure */
+		
+		
 		tree.racine = tree.insert(tree.racine, new Cle(0,0,0,1)); 
 		tree.racine = tree.insert(tree.racine, new Cle(1,0,0,1)); 
 		tree.racine = tree.insert(tree.racine, new Cle(0,1,0,1)); 
@@ -157,7 +132,9 @@ public class AVL {
 		tree.racine = tree.insert(tree.racine, new Cle(0,1,1,1)); 
 		tree.racine = tree.insert(tree.racine, new Cle(1,1,1,1)); 
 
-		AVL.preOrder(tree.racine); 
+		System.out.println();
+		AVL.parcoursPrefixe(tree.racine);
+		
+		System.out.println(tree.recherche(tree.racine, new Cle(1,0,0,1)));
 	} 
 } 
-//This code has been contributed by Mayank Jaiswal 
