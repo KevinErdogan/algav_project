@@ -35,6 +35,7 @@ public Cle md5(String s) {
 		
 		byte [] message = s.getBytes();
 		
+		
 		int sizePadding = message.length+1;
 		
 		while((sizePadding % 512 ) != 448) {
