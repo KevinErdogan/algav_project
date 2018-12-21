@@ -76,10 +76,9 @@ public class Tableau {
 	//CONSITER
 	public Tableau ConsIter(List<Cle> cles) {
 	
-		Tableau tab = new Tableau();
-
-		for (int i = 0; i<cles.size(); i++) { 
-	        tab.Ajout(cles.get(i)); 
+		Tableau tab = new Tableau(cles);
+		for (int i = tab.list.size()/ 2 - 1; i >= 0; i--) { 
+	        tab.descendre(i); 
 		}
 		
 		return tab;
@@ -110,7 +109,7 @@ public class Tableau {
 	
 	public void printList() {
 		for(Cle c : list) {
-			System.out.print(c +" ");
+			System.out.println(c +" ");
 		}
 		System.out.println();
 	}
