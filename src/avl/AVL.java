@@ -17,6 +17,10 @@ public class AVL {
 	
 	private Noeud racine=null;
 	
+	public void setRacine(Noeud n) {
+		racine=n;
+	}
+	
 	private Noeud rotationDroite(Noeud n) { 
 		Noeud g = n.gauche; 
 		Noeud T = g.droite; 
@@ -134,6 +138,7 @@ public class AVL {
 
 		System.out.println();
 		AVL.parcoursPrefixe(tree.racine);
+		
 		
 		System.out.println(tree.recherche(tree.racine, new Cle(1,0,0,1)));
 	} 

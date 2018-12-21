@@ -131,8 +131,9 @@ public Cle md5(String s) {
 	
 	public static void main(String[] args) {
 		Md5 md = new Md5();
-		System.out.println(md.md5("a"));
-		System.out.println(md.md5("Bonjour"));
+		//System.out.println(md.md5(""));
+		//System.out.println(md.md5("a"));
+		System.out.println(md.md5("Bonjour")); 
 	}
 }
 

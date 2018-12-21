@@ -24,6 +24,25 @@ public class Tableau {
 	
 	/*----------------- LES 4 FONCTIONS FONDAMENTALES ----------------- */
 	
+	public void Ajout(Cle c) {
+		list.add(c); //ajout à la fin du tableau
+	    Ajout(list.size()-1);
+	}
+	
+	private void Ajout(int i) {
+		Cle p = list.get((i-1)/2); //on récupère le parent de l'élément indice i
+		Cle curr = list.get(i); //copie de l'élément indice i
+		
+		if(i>0 && curr.inf(p)) { //l'élément indice i pas la racine et inf à son parent
+			swap(list,i,(i-1)/2); //échange
+			Ajout((i-1)/2); //récursion : on remonte tant que parent plus grand
+		}
+		else {
+			return;
+		}		
+	}
+	
+	
 	//SUPPRIME LE MINIMUM
 	public void SupprMin() {
 		//cas de base
@@ -53,25 +72,8 @@ public class Tableau {
 			}
 		}
 	}
-	
-	public void Ajout(Cle c) {
-		list.add(c); //ajout à la fin du tableau
-	    Ajout(list.size()-1);
-	}
-	
-	private void Ajout(int i) {
-		Cle p = list.get((i-1)/2); //on récupère le parent de l'élément indice i
-		Cle curr = list.get(i); //copie de l'élément indice i
-		
-		if(i>0 && curr.inf(p)) { //l'élément indice i pas la racine et inf à son parent
-			swap(list,i,(i-1)/2); //échange
-			Ajout((i-1)/2); //récursion : on remonte tant que parent plus grand
-		}
-		else {
-			return;
-		}		
-	}
-	
+
+	//CONSITER
 	public Tableau ConsIter(List<Cle> cles) {
 	
 		Tableau tab = new Tableau();

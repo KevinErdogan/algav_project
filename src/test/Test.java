@@ -11,12 +11,25 @@ import java.util.List;
 import avl.AVL;
 import cle.Cle;
 import fileBinomiale.FileBinomiale;
+import fileBinomiale.TournoiBinomiale;
 import md5.Md5;
+import tasMin.arbre.ArbreBinaire;
 import tasMin.tableau.Tableau;
 
 public class Test {
 	// Test Area
 	public static void main(String[] args) {
+		
+		/*TestConsIter Tas binaire	
+		//Test.testTasArbreConsIter("cles_alea");
+		//Test.testTasTableauConsIter("cles_alea");
+		 */
+		 
+		
+		//TestUnion Tas binaire	
+	//	Test.testTasArbreUnion("cles_alea");
+		//Test.testTasTableauUnion("cles_alea");
+		 
 		/* Test Ajout
 		FileBinomiale f = new FileBinomiale();
 		f= f.ajout(new TournoiBinomiale(new Cle(0,0,0,1)));
@@ -36,8 +49,12 @@ public class Test {
 		// Test ConsIter FileBinomiale
 		//Test.testFileBinomialeConsIter("cles_alea");
 		Test.AVLShakespeare("Shakespeare");
-		
+		//Test.testFileBinomialeUnion("cles_alea");
 		//Test.testFileBinomialeConsIter("cles_alea");
+		
+		//Test.testTasMinSupprMin("cles_alea");
+		//Test.testTasMinAjout("cles_alea");
+		//Test.testTasMinShakespeareConsIter("Shakespeare");
 	}
 	
 	//Q6.12
@@ -49,26 +66,116 @@ public class Test {
 		  }
 		});
 		Md5 hash = new Md5();
-		
+		AVL tree = new AVL();
+		LinkedList<String> uniqueWords = new LinkedList<String>();
 		for(File file : txtFiles) {
 			System.out.println(file.getName());
-			AVL tree = new AVL();
-		
 			List<String> words = Test.readWordFile(repertoryName+"/"+file.getName());
-			
-			LinkedList<String> uniqueWords = new LinkedList<String>();
 			long startTime = System.nanoTime();
 			for(String w : words) {
 				Cle c = hash.md5(w);
-				if(!tree.recherche(tree.getRacine(), c)){
+				if(tree.getRacine()==null) {
 					uniqueWords.addLast(w);
-					tree.insert(tree.getRacine(),c);
+					tree.setRacine(tree.insert(tree.getRacine(),c));
 				}
+				else if(!tree.recherche(tree.getRacine(), c)){
+					uniqueWords.addLast(w);
+					tree.setRacine(tree.insert(tree.getRacine(),c));
+				}
+				
 			}
 			long endTime = System.nanoTime();
-			System.out.println(/*"End ! Time : " */+ (endTime - startTime) + " ns.");
-			//System.out.println(uniqueWords);
-			
+			System.out.println(/*"End ! Time : " */+ (endTime - startTime) + " ns.");				
+		}
+			System.out.println(uniqueWords.size());
+
+	}
+	
+	
+	public static void testTasTableauConsIter(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		for(File file : txtFiles) {
+			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+file.getName());
+			System.out.println("Test du fichier : "+file.getName());
+			System.out.println("Nombre de cles : " + cles.size());
+			System.out.println("Test de la complexite temporelle de la fonction ConsIter");
+			System.out.println("Start...");
+			Tableau t = new Tableau();
+			long startTime = System.nanoTime();
+			t.ConsIter(cles);
+			long endTime = System.nanoTime();
+			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
+		}
+	}
+	
+	public static void testTasArbreConsIter(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		for(File file : txtFiles) {
+			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+file.getName());
+			System.out.println("Test du fichier : "+file.getName());
+			System.out.println("Nombre de cles : " + cles.size());
+			System.out.println("Test de la complexite temporelle de la fonction ConsIter");
+			System.out.println("Start...");
+			ArbreBinaire a = new ArbreBinaire();
+			long startTime = System.nanoTime();
+			a.ConsIter(cles);
+			long endTime = System.nanoTime();
+			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
+		}
+	}
+	
+	public static void testTasArbreUnion(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		for(File file : txtFiles) {
+			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+file.getName());
+			System.out.println("Test du fichier : "+file.getName());
+			System.out.println("Nombre de cles : " + cles.size());
+			System.out.println("Test de la complexite temporelle de la fonction Union");
+			System.out.println("Start...");
+			ArbreBinaire a1 = new ArbreBinaire().ConsIter(cles);
+			ArbreBinaire a2 = new ArbreBinaire().ConsIter(cles);
+			a2.ConsIter(cles);
+			long startTime = System.nanoTime();
+			a1.Union(a2);
+			long endTime = System.nanoTime();
+			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
+		}
+	}
+	
+	public static void testTasTableauUnion(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		for(File file : txtFiles) {
+			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+file.getName());
+			System.out.println("Test du fichier : "+file.getName());
+			System.out.println("Nombre de cles : " + cles.size());
+			System.out.println("Test de la complexite temporelle de la fonction Union");
+			System.out.println("Start...");
+			Tableau t1 = new Tableau().ConsIter(cles);
+			Tableau t2 = new Tableau().ConsIter(cles);
+			long startTime = System.nanoTime();
+			t1.Union(t2);
+			long endTime = System.nanoTime();
+			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
 		}
 	}
 	
@@ -93,49 +200,151 @@ public class Test {
 		}
 	}
 	
-	public static void testTasTableauConsIter(String repertoryName) {
-		File rep = new File(repertoryName);
-		File[] txtFiles = rep.listFiles(new FilenameFilter(){
-		  public boolean accept(File dir, String name) {
-		    return name.endsWith(".txt");
-		  }
-		});
-		for(File file : txtFiles) {
-			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+file.getName());
-			System.out.println("Test du fichier : "+file.getName());
-			System.out.println("Nombre de cles : " + cles.size());
-			System.out.println("Test de la complexite temporelle de la fonction ConsIter");
-			System.out.println("Start...");
-			Tableau t = new Tableau();
-			long startTime = System.nanoTime();
-			t.ConsIter(cles);
-			long endTime = System.nanoTime();
-			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
-		}
-	}
-
-	
 	public static void testFileBinomialeUnion(String repertoryName) {
+		/*File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});*/
+		//for(File file : txtFiles) {
+			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+"jeu_1_nb_cles_50000.txt");
+			List<Cle> cles2 = Test.readKeyFile(repertoryName+"/"+"jeu_2_nb_cles_50000.txt");
+		//	System.out.println("Test du fichier : "+file.getName());
+		/*	System.out.println("Nombre de cles : " + cles.size());
+			System.out.println("Test de la complexite temporelle de la fonction ConsIter");
+			System.out.println("Start...");*/
+			FileBinomiale f = new FileBinomiale();
+			FileBinomiale f2 = new FileBinomiale();
+			f.ConsIter(cles);
+			f.ConsIter(cles2);
+			long startTime = System.nanoTime();
+			f.union(f2);
+			long endTime = System.nanoTime();
+			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
+		//}
+	}
+	
+	
+	//Q.1.4
+
+	public static void testTasMinSupprMin(String repertoryName) {
 		File rep = new File(repertoryName);
 		File[] txtFiles = rep.listFiles(new FilenameFilter(){
 		  public boolean accept(File dir, String name) {
 		    return name.endsWith(".txt");
 		  }
 		});
+		
 		for(File file : txtFiles) {
 			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+file.getName());
 			System.out.println("Test du fichier : "+file.getName());
 			System.out.println("Nombre de cles : " + cles.size());
-			System.out.println("Test de la complexite temporelle de la fonction ConsIter");
+			System.out.println("Test de la complexite temporelle de la fonction SupprMin");
 			System.out.println("Start...");
-			FileBinomiale f = new FileBinomiale();
+			Tableau t = new Tableau().ConsIter(cles);
 			long startTime = System.nanoTime();
-			f.ConsIter(cles);
+			t.SupprMin();
 			long endTime = System.nanoTime();
 			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
 		}
 	}
-
+	
+	public static void testTasMinAjout(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		
+		for(File file : txtFiles) {
+			List<Cle> cles = Test.readKeyFile(repertoryName+"/"+file.getName());
+			System.out.println("Test du fichier : "+file.getName());
+			System.out.println("Nombre de cles : " + cles.size());
+			System.out.println("Test de la complexite temporelle de la fonction SupprMin");
+			System.out.println("Start...");
+			Tableau t = new Tableau().ConsIter(cles);
+			long startTime = System.nanoTime();
+			t.Ajout(new Cle(1,0,0,1));
+			long endTime = System.nanoTime();
+			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
+		}
+	}
+	
+	public static void testTasMinShakespeareConsIter(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		int cmp =0;
+		long av=0;
+		Md5 hash = new Md5();
+		
+		for(File file : txtFiles) {
+			List<String> words = Test.readWordFile(repertoryName+"/"+file.getName());
+			List<Cle> cles = new ArrayList<Cle>();
+			for(String w : words) {
+				cles.add(hash.md5(w));
+			}
+			
+			System.out.println("Test du fichier : "+file.getName());
+			System.out.println("Nombre de cles : " + cles.size());
+			System.out.println("Test de la complexite temporelle de la fonction ConsIter");
+			System.out.println("Start...");
+			Tableau t1 = new Tableau();
+			long startTime = System.nanoTime();
+			t1.ConsIter(cles);
+			long endTime = System.nanoTime();
+			av += (endTime - startTime);
+			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
+			cmp++;
+		}
+		
+		
+		
+		System.out.println("Moyenne " + av/cmp);
+	}
+	
+	public static void testTasMinShakespeareUnion(String repertoryName) {
+		File rep = new File(repertoryName);
+		File[] txtFiles = rep.listFiles(new FilenameFilter(){
+		  public boolean accept(File dir, String name) {
+		    return name.endsWith(".txt");
+		  }
+		});
+		int cmp =0;
+		long av=0;
+		Md5 hash = new Md5();
+		
+		for(File file : txtFiles) {
+			List<String> words = Test.readWordFile(repertoryName+"/"+file.getName());
+			List<Cle> cles = new ArrayList<Cle>();
+			for(String w : words) {
+				cles.add(hash.md5(w));
+			}
+			
+			System.out.println("Test du fichier : "+file.getName());
+			System.out.println("Nombre de cles : " + cles.size());
+			System.out.println("Test de la complexite temporelle de la fonction Union");
+			System.out.println("Start...");
+			
+			Tableau t1 = new Tableau().ConsIter(cles);
+			Tableau t2 = new Tableau().ConsIter(cles);
+			long startTime = System.nanoTime();
+			t1.Union(t2);
+			long endTime = System.nanoTime();
+			av += (endTime - startTime);
+			System.out.println("End ! Time : " + (endTime - startTime) + " ns.");
+			cmp++;
+		}
+		System.out.println("Moyenne " + av/cmp);
+	}
+	
+	
+	
 	public static List<Cle> readKeyFile(String path) {
 		List<Cle> cles = new LinkedList<Cle>();
 		try {

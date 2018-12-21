@@ -136,51 +136,12 @@ public class ArbreBinaire {
 	
 	
 	public ArbreBinaire ConsIter(List <Cle> cles) {
+		ArbreBinaire a = new ArbreBinaire();
+		for(Cle c : cles) {
+			a.Ajout(c);
+		}
 		
-		List <Noeud> noeuds = new ArrayList<Noeud>();
-		
-		//liste des noeuds du nouveau tas
-				for (Cle c : cles) {
-					noeuds.add(new Noeud(c));
-				}
-				
-				//pere (i-1)/2
-				//gauche 2*i+1
-				//droite 2*i+2
-				//creation de l'arborescence du tas (set : fils gauche, fils droit et pere)
-				int taille = noeuds.size();
-				for(int i =0; i<taille;i++) {
-					Noeud curr = noeuds.get(i);		
-					
-					if((2*i+1) < taille && (2*i+2) < taille) {
-						Noeud g = noeuds.get(2*i+1);
-						Noeud d = noeuds.get(2*i+2);
-						curr.setGauche(g);
-						curr.setDroit(d);
-					}
-					else if((2*i+1) < taille) {
-						Noeud g = noeuds.get(2*i+1);
-						curr.setGauche(g);
-					}
-					else if((2*i+2) < taille) {
-						Noeud d = noeuds.get(2*i+2);
-						curr.setDroit(d);
-					}
-					if((i-1)/2 > 0) {
-						Noeud p = noeuds.get((i-1)/2);
-						curr.setParent(p);
-					}
-				}
-				
-				/*
-				 *pour chaque noeud qui ont des fils : si leur clé est plus petite alors on les fait descendre dans
-				 *l'arbre en commencant par le dernier noeud ayant des fils
-				 */
-				for(int i = (noeuds.size()/2)-1;i>=0;i--){
-					descendre(noeuds.get(i));
-				}
-				
-				return new ArbreBinaire(noeuds.get(0));
+		return a;
 	}
 	
 	
